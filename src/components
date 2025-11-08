@@ -1,1 +1,47 @@
+import React, { useState } from 'react';
+import Login from './Login';
+import Signup from './Signup';
+import { User } from '../../types';
 
+interface AuthProps {
+  onLogin: (user: User) => void;
+}
+
+type AuthTab = 'login' | 'signup';
+
+const Auth: React.FC<AuthProps> = ({ onLogin }) => {
+  const [activeTab, setActiveTab] = useState<AuthTab>('login');
+
+  const handleTabChange = (tab: AuthTab) => {
+    setActiveTab(tab);
+  };
+
+  return (
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-tabs">
+          <button
+            className={`auth-tab ${activeTab === 'login' ? 'active' : ''}`}
+            onClick={() => handleTabChange('login')}
+          >
+            Sign In
+          </button>
+          <button
+            className={`auth-tab ${activeTab === 'signup' ? 'active' : ''}`}
+            onClick={() => handleTabChange('signup')}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        {activeTab === 'login' ? (
+          <Login onLogin={onLogin} onSwitchToSignup={() => handleTabChange('signup')} />
+        ) : (
+          <Signup onLogin={onLogin} onSwitchToLogin={() => handleTabChange('login')} />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Auth;
